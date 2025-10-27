@@ -1,0 +1,10 @@
+---
+alwaysApply: true
+---
+
+# Code Formatting 
+- Always use four spaces for indentation.
+- Always use camelCase for variable names.
+- Always use PascalCase for component names.
+- Always use kebab-case for file names.
+- Never use semicolon at the end of a line.
