@@ -11,7 +11,7 @@ export default function ConnectGitLabButton() {
         try {
             await signIn.social({
                 provider: "gitlab",
-                callbackURL: "/dashboard",
+                callbackURL: "/",
             })
         } catch (error) {
             console.error("GitLab connection error:", error)

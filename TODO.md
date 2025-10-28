@@ -4,70 +4,11 @@
 
 ---
 
-## Phase 1: Update GitHub OAuth Scopes (Prerequisite)
-**Goal:** Give your app permission to access all user repos and create webhooks
+## Phase 1: Update GitHub OAuth Scopes (Prerequisite) - Done
 
-- [ ] **Update `lib/auth.ts`**
-  - Add `scope` array to GitHub provider config
-  - Include: `"repo"`, `"admin:repo_hook"`, `"read:user"`, `"user:email"`
-  - Why: `repo` = full access to all repos; `admin:repo_hook` = webhook permissions
+## Phase 2: Add GitLab OAuth Provider (Parallel with Phase 1) - Done
 
-- [ ] **Deploy & Request User Re-auth**
-  - After deployment, users must re-authorize (one-time)
-  - They'll see the new scopes in GitHub OAuth dialog
-
----
-
-## Phase 2: Add GitLab OAuth Provider (Parallel with Phase 1)
-**Goal:** Allow users to connect their GitLab account
-
-- [ ] **Update `lib/auth.ts`**
-  - Add GitLab provider config (similar to GitHub)
-  - Scopes: `api` (full access)
-
-- [ ] **Update Database Schema** (see Phase 3)
-  - Extend `account` table to track GitLab connection
-
-- [ ] **Test GitLab Sign-in Flow**
-  - Verify token is stored correctly in database
-
----
-
-## Phase 3: Database Schema Updates (Foundation)
-**Goal:** Create tables to track synced repositories
-
-- [ ] **Create `userRepository` Table**
-  ```sql
-  CREATE TABLE "userRepository" (
-    id text PRIMARY KEY,
-    userId text NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
-    githubRepoName text NOT NULL,           -- "owner/repo"
-    gitlabProjectId integer NOT NULL,       -- numeric ID
-    githubWebhookId integer,                -- to delete later
-    createdAt timestamp DEFAULT now(),
-    updatedAt timestamp DEFAULT now(),
-    UNIQUE(userId, githubRepoName)
-  );
-  ```
-
-- [ ] **Create `syncLog` Table** (optional, for debugging)
-  ```sql
-  CREATE TABLE "syncLog" (
-    id text PRIMARY KEY,
-    userRepositoryId text REFERENCES "userRepository"(id),
-    commitHash text,
-    status text,                            -- 'pending' | 'success' | 'failed'
-    errorMessage text,
-    createdAt timestamp DEFAULT now()
-  );
-  ```
-
-- [ ] **Run Drizzle Migrations**
-  - Update `lib/db/schema.ts`
-  - Generate migration with Drizzle CLI
-  - Apply to database
-
----
+## Phase 3: Database Schema Updates (Foundation) - Done
 
 ## Phase 4: GitHub API Helper Functions
 **Goal:** Encapsulate GitHub API calls
